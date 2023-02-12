@@ -1,45 +1,46 @@
-from django.shortcuts import render, redirect
-from .forms import MovieForm
-from .models import Movie
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from .forms import MovieListForm, MovieForm
+from .models import MovieList, Movie
+
 
 def movie_list(request):
-    movies = Movie.objects.all()
-    if request.method == "POST":
-        if request.POST.get("title"):
-            title = request.POST["title"]
-            year = request.POST["year"]
-            rating = request.POST["rating"]
-            movie = Movie(title=title, year=year, rating=rating)
-            movie.save()
-            return redirect("movie_list")
-    return render(request, "movie_list.html", {"movies": movies})
+    movie_lists = MovieList.objects.all()
+    return render(request, 'movie_list.html', {'movie_lists': movie_lists})
 
-def delete_movie(request, id):
-    movie = Movie.objects.get(id=id)
-    movie.delete()
-    return redirect("movie_list")
 
-def movie_detail(request, pk):
-    movie = Movie.objects.get(pk=pk)
-    return render(request, 'movie_detail.html', {'movie': movie})
+def movie_list_detail(request, pk):
+    movie_list = MovieList.objects.get(pk=pk)
+    movies = movie_list.movie_set.all()
+    return render(request, 'movie_list_detail.html', {'movie_list': movie_list, 'movies': movies})
 
-def movie_add(request):
+
+def create_movie_list(request):
+    if request.method == 'POST':
+        form = MovieListForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_list')
+    else:
+        form = MovieListForm()
+    return render(request, 'create_movie_list.html', {'form': form})
+
+
+def create_movie(request, pk):
+    movie_list = MovieList.objects.get(pk=pk)
     if request.method == 'POST':
         form = MovieForm(request.POST)
         if form.is_valid():
-            movie = form.save()
-            return redirect('movie_detail', pk=movie.pk)
+            movie = form.save(commit=False)
+            movie.movie_list = movie_list
+            movie.save()
+            return redirect('movie_list_detail', pk=pk)
     else:
         form = MovieForm()
-    return render(request, 'movie_form.html', {'form': form})
+    return render(request, 'create_movie.html', {'form': form})
 
-def movie_edit(request, pk):
-    movie = Movie.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = MovieForm(request.POST, instance=movie)
-        if form.is_valid():
-            movie = form.save()
-            return redirect('movie_detail', pk=movie.pk)
-    else:
-        form = MovieForm(instance=movie)
-    return render(request, 'movie_form.html', {'form': form})
+
+def delete_movie(request, pk, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    movie.delete()
+    return redirect('movie_list_detail', pk=pk)
