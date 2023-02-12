@@ -1,0 +1,19 @@
+<h1>Movie List</h1>
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="title" placeholder="Movie Title">
+  <input type="text" name="year" placeholder="Movie Year">
+  <input type="text" name="rating" placeholder="Movie Rating">
+  <button type="submit">Add Movie</button>
+</form>
+<ul>
+  {% for movie in movies %}
+    <li>{{ movie.title }} ({{ movie.year }}) - {{ movie.rating }}
+      <form method="post" action="{% url 'delete_movie' movie.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
