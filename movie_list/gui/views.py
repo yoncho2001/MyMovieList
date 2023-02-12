@@ -53,6 +53,7 @@ def delete_movie_list(request, pk):
         return redirect('movie_list')
     return render(request, 'delete_movie_list.html', {'movie_list': movie_list})
 
+
 def edit_movie(request, pk, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
 
