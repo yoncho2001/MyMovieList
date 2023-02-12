@@ -1,6 +1,8 @@
 <h1>{{ movie_list.name }}</h1>
 
 <a href="{% url 'create_movie' movie_list.pk %}">Add Movie</a>
+<a class="btn btn-danger" href="{% url 'delete_movie_list' movie_list.pk %}">Delete List</a>
+<a href="{% url 'movie_list' %}" class="btn btn-primary">Return to Movie Lists</a>
 
 {% for movie in movies %}
     <h2>{{ movie.title }}</h2>
@@ -9,4 +11,3 @@
     <a href="{% url 'delete_movie' movie_list.pk movie.pk %}">Delete</a>
 {% endfor %}
 
-<a href="{% url 'movie_list' %}" class="btn btn-primary">Return to Movie Lists</a>

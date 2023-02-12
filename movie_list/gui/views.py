@@ -44,3 +44,11 @@ def delete_movie(request, pk, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     movie.delete()
     return redirect('movie_list_detail', pk=pk)
+
+
+def delete_movie_list(request, pk):
+    movie_list = MovieList.objects.get(pk=pk)
+    if request.method == 'POST':
+        movie_list.delete()
+        return redirect('movie_list')
+    return render(request, 'delete_movie_list.html', {'movie_list': movie_list})
