@@ -1,7 +1,19 @@
-<h1>Create Movie List</h1>
+{% load static %}
+<html>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+<head>
+    <title>My Movie list</title>
+    <link rel="stylesheet" href="{% static 'create_movie_list.css' %}" />
+</head>
+
+<body>
+    <h1>Create Movie List</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+
+</html>
