@@ -52,3 +52,17 @@ def delete_movie_list(request, pk):
         movie_list.delete()
         return redirect('movie_list')
     return render(request, 'delete_movie_list.html', {'movie_list': movie_list})
+
+def edit_movie(request, pk, movie_pk):
+    movie_list = get_object_or_404(MovieList, pk=pk)
+    movie = get_object_or_404(Movie, pk=movie_pk)
+
+    if request.method == 'POST':
+        form = MovieForm(request.POST, instance=movie)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_list_detail', pk=pk)
+    else:
+        form = MovieForm(instance=movie)
+
+    return render(request, 'edit_movie.html', {'form': form})

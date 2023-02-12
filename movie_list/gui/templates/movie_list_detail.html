@@ -9,5 +9,6 @@
     <p>Year: {{ movie.year }}</p>
     <p>Rating: {{ movie.rating }}</p>
     <a href="{% url 'delete_movie' movie_list.pk movie.pk %}">Delete</a>
+    <a href="{% url 'edit_movie' pk=movie_list.pk movie_pk=movie.pk %}">Edit</a>
 {% endfor %}
 
